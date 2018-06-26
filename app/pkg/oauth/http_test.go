@@ -33,3 +33,10 @@ func TestGetAuthURL_GitHub(t *testing.T) {
 
 	Expect(authURL).Equals("https://github.com/login/oauth/authorize?client_id=&redirect_uri=http%3A%2F%2Flogin.test.fider.io%3A3000%2Foauth%2Fgithub%2Fcallback&response_type=code&scope=user%3Aemail&state=")
 }
+
+func TestGetAuthURL_Decode(t *testing.T) {
+	RegisterT(t)
+
+	svc := &oauth.HTTPService{}
+	_ = svc.GetAuthURL("http://login.test.fider.io:3000", oauth.DiscordProvider, "")
+}

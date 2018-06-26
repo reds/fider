@@ -69,6 +69,25 @@ var (
 				}
 			},
 		},
+		DiscordProvider: {
+			profileURL: func(token *oauth2.Token) string {
+				return "https://discordapp.com/api/users/@me?access_token=" + url.QueryEscape(token.AccessToken)
+			},
+			config: func(authEndpoint string) *oauth2.Config {
+				return &oauth2.Config{
+					ClientID:     os.Getenv("OAUTH_DISCORD_CLIENTID"),
+					ClientSecret: os.Getenv("OAUTH_DISCORD_SECRET"),
+					RedirectURL:  authEndpoint + "/oauth/discord/callback",
+					Scopes: []string{
+						"email",
+					},
+					Endpoint: oauth2.Endpoint{
+						AuthURL:  "https://discordapp.com/api/oauth2/authorize",
+						TokenURL: "https://discordapp.com/api/oauth2/token",
+					},
+				}
+			},
+		},
 	}
 )
 
@@ -118,12 +137,10 @@ func (p *HTTPService) GetProfile(authEndpoint string, provider string, code stri
 	if err != nil {
 		return nil, errors.Wrap(err, "failed to exchange OAuth2 code with %s", provider)
 	}
-
 	profile := &UserProfile{}
 	if err = doGet(settings.profileURL(oauthToken), profile); err != nil {
 		return nil, err
 	}
-
 	//GitHub allows users to omit name, so we use their login name
 	if strings.Trim(profile.Name, " ") == "" {
 		profile.Name = profile.Login

@@ -75,8 +75,16 @@ export class SignInControl extends React.Component<SignInControlProps, SignInCon
         />
       </div>
     );
-    const hasOAuth = !!(google || facebook || github);
-
+    const discord = Fider.settings.auth.providers.discord && (
+      <div className="col-sm l-social-col">
+        <SocialSignInButton
+          oauthEndpoint={Fider.settings.auth.endpoint}
+          provider="discord"
+          redirectTo={this.props.redirectTo}
+        />
+      </div>
+    );
+    const hasOAuth = !!(google || facebook || github || discord);
     return (
       <div className="c-signin-control">
         {hasOAuth && (
@@ -85,12 +93,12 @@ export class SignInControl extends React.Component<SignInControlProps, SignInCon
               {facebook}
               {google}
               {github}
+              {discord}
             </div>
             <p className="info">We will never post to these accounts on your behalf.</p>
             <div className="c-divider">OR</div>
           </div>
         )}
-
         {this.props.useEmail && (
           <div>
             <p>Enter your email address to sign in</p>

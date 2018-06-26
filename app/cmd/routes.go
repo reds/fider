@@ -43,6 +43,8 @@ func routes(r *web.Engine) *web.Engine {
 		noTenant.Get("/oauth/google/callback", handlers.OAuthCallback(oauth.GoogleProvider))
 		noTenant.Get("/oauth/github", handlers.SignInByOAuth(oauth.GitHubProvider))
 		noTenant.Get("/oauth/github/callback", handlers.OAuthCallback(oauth.GitHubProvider))
+		noTenant.Get("/oauth/discord", handlers.SignInByOAuth(oauth.DiscordProvider))
+		noTenant.Get("/oauth/discord/callback", handlers.OAuthCallback(oauth.DiscordProvider))
 	}
 
 	r.Use(middlewares.Tenant())

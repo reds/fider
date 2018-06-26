@@ -2,7 +2,7 @@ import * as React from "react";
 import { Button } from "@fider/components/common";
 
 interface SocialSignInButtonProps {
-  provider: "google" | "facebook" | "github";
+  provider: "google" | "facebook" | "github" | "discord";
   oauthEndpoint?: string;
   redirectTo?: string;
 }
@@ -19,7 +19,11 @@ const providers = {
   github: {
     name: "GitHub",
     class: "m-social m-github"
-  }
+  },
+    discord: {
+        name: "Discord",
+        class: "m-social m-discord"
+    }
 };
 
 export class SocialSignInButton extends React.Component<SocialSignInButtonProps, {}> {
@@ -28,7 +32,6 @@ export class SocialSignInButton extends React.Component<SocialSignInButtonProps,
     const href = this.props.oauthEndpoint
       ? `${this.props.oauthEndpoint}/oauth/${this.props.provider}?redirect=${redirectTo}`
       : undefined;
-
     return (
       <Button href={href} fluid={true} className={providers[this.props.provider].class}>
         <i className="svg" />

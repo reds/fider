@@ -12,6 +12,8 @@ const (
 	GoogleProvider = "google"
 	//GitHubProvider is const for 'github'
 	GitHubProvider = "github"
+	//DiscordProvider
+	DiscordProvider = "discord"
 )
 
 //UserProfile represents an OAuth user profile
@@ -30,6 +32,8 @@ func IsProviderEnabled(name string) bool {
 		return os.Getenv("OAUTH_FACEBOOK_APPID") != ""
 	} else if name == GitHubProvider {
 		return os.Getenv("OAUTH_GITHUB_CLIENTID") != ""
+	} else if name == DiscordProvider {
+		return os.Getenv("OAUTH_DISCORD_CLIENTID") != ""
 	}
 	return false
 }

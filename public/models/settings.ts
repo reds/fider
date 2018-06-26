@@ -14,6 +14,7 @@ export interface SystemSettings {
       google: boolean;
       facebook: boolean;
       github: boolean;
+      discord: boolean;
     };
   };
 }

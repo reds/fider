@@ -145,6 +145,7 @@ func (r *Renderer) Render(w io.Writer, name string, props Props, ctx *Context) {
 				oauth.GoogleProvider:   oauth.IsProviderEnabled(oauth.GoogleProvider),
 				oauth.FacebookProvider: oauth.IsProviderEnabled(oauth.FacebookProvider),
 				oauth.GitHubProvider:   oauth.IsProviderEnabled(oauth.GitHubProvider),
+				oauth.DiscordProvider:  oauth.IsProviderEnabled(oauth.DiscordProvider),
 			},
 		},
 	}
