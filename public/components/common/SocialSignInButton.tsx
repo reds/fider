@@ -20,10 +20,10 @@ const providers = {
     name: "GitHub",
     class: "m-social m-github"
   },
-    discord: {
-        name: "Discord",
-        class: "m-social m-discord"
-    }
+  discord: {
+    name: "Discord",
+    class: "m-social m-discord"
+  }
 };
 
 export class SocialSignInButton extends React.Component<SocialSignInButtonProps, {}> {
