@@ -96,8 +96,8 @@ jobs:
           command: |
             if [ $DOCKER_USER != "" ] && [ $CIRCLE_BRANCH == "master" ] && [[ -z $CI_PULL_REQUEST ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker tag getfider/fider getfider/fider:master
-              docker push getfider/fider:master
+              docker tag corporateclash/fider corporateclash/fider:master
+              docker push corporateclash/fider:master
             fi
             if [ $DOCKER_USER != "" ] && [[ ! -z $CI_PULL_REQUEST ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
