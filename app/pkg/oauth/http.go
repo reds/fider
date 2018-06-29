@@ -79,7 +79,7 @@ var (
 					ClientSecret: os.Getenv("OAUTH_DISCORD_SECRET"),
 					RedirectURL:  authEndpoint + "/oauth/discord/callback",
 					Scopes: []string{
-						"email",
+						"identify", "email",
 					},
 					Endpoint: oauth2.Endpoint{
 						AuthURL:  "https://discordapp.com/api/oauth2/authorize",
@@ -91,7 +91,33 @@ var (
 	}
 )
 
-func doGet(url string, v interface{}) error {
+func doGet(url, provider, token string, v interface{}) error {
+	if provider == "discord" {
+		req, _ := http.NewRequest("GET", url, nil)
+		req.Header.Set("Authorization", "Bearer "+token)
+		resp, err := http.DefaultClient.Do(req)
+		if err != nil {
+			return err
+		}
+		defer resp.Body.Close()
+		bytes, err := ioutil.ReadAll(resp.Body)
+		if err != nil {
+			return errors.Wrap(err, "failed to request GET %s", url)
+		}
+		var p struct {
+			Username, Email string
+			ID              json.Number
+		}
+		err = json.Unmarshal(bytes, &p)
+		if err != nil {
+			return errors.Wrap(err, "failed unmarshal discord response")
+		}
+		v.(*UserProfile).Name = p.Username
+		v.(*UserProfile).Login = p.Username
+		v.(*UserProfile).ID = p.ID
+		v.(*UserProfile).Email = p.Email
+		return nil
+	}
 	r, err := http.Get(url)
 	if err != nil {
 		return err
@@ -103,7 +129,6 @@ func doGet(url string, v interface{}) error {
 	if err != nil {
 		return errors.Wrap(err, "failed to request GET %s", url)
 	}
-
 	err = json.Unmarshal(bytes, v)
 	if err != nil {
 		return errors.Wrap(err, "failed unmarshal response")
@@ -138,13 +163,12 @@ func (p *HTTPService) GetProfile(authEndpoint string, provider string, code stri
 		return nil, errors.Wrap(err, "failed to exchange OAuth2 code with %s", provider)
 	}
 	profile := &UserProfile{}
-	if err = doGet(settings.profileURL(oauthToken), profile); err != nil {
+	if err = doGet(settings.profileURL(oauthToken), provider, oauthToken.AccessToken, profile); err != nil {
 		return nil, err
 	}
 	//GitHub allows users to omit name, so we use their login name
 	if strings.Trim(profile.Name, " ") == "" {
 		profile.Name = profile.Login
 	}
-
 	return profile, nil
 }
