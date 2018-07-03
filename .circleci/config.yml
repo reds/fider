@@ -36,8 +36,8 @@ jobs:
       - run: make lint
       - run: CGO_ENABLED=0 GOOS=linux GOARCH=amd64 make build
       - setup_remote_docker
-      - run: docker build -t getfider/fider .
-      - run: docker save -o ./docker-image.tar getfider/fider
+      - run: docker build -t corporateclash/fider .
+      - run: docker save -o ./docker-image.tar corporateclash/fider
       - persist_to_workspace:
           root: ./
           paths:
@@ -96,13 +96,13 @@ jobs:
           command: |
             if [ $DOCKER_USER != "" ] && [ $CIRCLE_BRANCH == "master" ] && [[ -z $CI_PULL_REQUEST ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker tag getfider/fider getfider/fider:master
-              docker push getfider/fider:master
+              docker tag corporateclash/fider corporateclash/fider:master
+              docker push corporateclash/fider:master
             fi
             if [ $DOCKER_USER != "" ] && [[ ! -z $CI_PULL_REQUEST ]]; then
               docker login -u $DOCKER_USER -p $DOCKER_PASS
-              docker tag getfider/fider getfider/fider:PR_$CIRCLE_PR_NUMBER
-              docker push getfider/fider:PR_$CIRCLE_PR_NUMBER
+              docker tag corporateclash/fider corporateclash/fider:PR_$CIRCLE_PR_NUMBER
+              docker push corporateclash/fider:PR_$CIRCLE_PR_NUMBER
             fi
 
 workflows:
@@ -125,3 +125,4 @@ workflows:
             - build
             - test-ui
             - test-server
+
